@@ -1,0 +1,30 @@
+﻿@model List<NetCoreSUS.Models.BusinessModels.Survey>
+
+@{
+
+    ViewData["SurveyName"] = "Survey";
+    ViewData["Title"] = "Survey";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">Survey</span>
+        <h1 class="govuk-heading-l">
+           List
+        </h1>
+
+        <p class="govuk-body">You could try some of these instead</p>
+        <ul class="govuk-list">
+            @foreach (var i in Model)
+            {
+                <li>
+                    <a class="govuk-link" href="/survey/r/@i.SurveyId">@i.ServiceName</a>
+                </li>
+
+            }
+        </ul>
+
+
+    </div>
+</div>

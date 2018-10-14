@@ -1,0 +1,124 @@
+﻿@model NetCoreSUS.Models.Data.SessionStateViewModel
+
+@{
+
+    ViewData["SurveyName"] = "Survey";
+    ViewData["Title"] = "Survey";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <span class="govuk-caption-l"> @Model.SurveyName survey</span>
+
+        <h1 class="govuk-heading-l" id="subsection-title">
+            Check your answers before submitting
+        </h1>
+        
+       
+        <form method="post">
+            <dl class="app-check-your-answers app-check-your-answers--short">
+                <div class="app-check-your-answers__contents">
+                    <dt class="app-check-your-answers__question">
+                        It was easy to complete the information required, to submit the application
+                    </dt>
+                    <dd class="app-check-your-answers__answer">
+                        @int.Parse(Model.Q1.ToString()).GetScoreText(true)
+                    </dd>
+                    <dd class="app-check-your-answers__change">
+                        <a asp-action="Statement1">
+                            Change<span class="govuk-visually-hidden"> statement 1</span>
+                        </a>
+                    </dd>
+                </div>
+
+                <div class="app-check-your-answers__contents">
+                    <dt class="app-check-your-answers__question">
+                        I found some of the questions difficult to understand
+                    </dt>
+                    <dd class="app-check-your-answers__answer">
+                        @int.Parse(Model.Q2.ToString()).GetScoreText(false)
+                    </dd>
+                    <dd class="app-check-your-answers__change">
+                        <a asp-action="Statement2">
+                            Change<span class="govuk-visually-hidden"> statement 2</span>
+                        </a>
+                    </dd>
+                </div>
+
+                <div class="app-check-your-answers__contents">
+                    <dt class="app-check-your-answers__question">
+                        I got through the application quickly
+                    </dt>
+                    <dd class="app-check-your-answers__answer">
+                        @int.Parse(Model.Q3.ToString()).GetScoreText(true)
+                    </dd>
+                    <dd class="app-check-your-answers__change">
+                        <a asp-action="Statement3">
+                            Change<span class="govuk-visually-hidden"> statement 3</span>
+                        </a>
+                    </dd>
+                </div>
+                
+                <div class="app-check-your-answers__contents">
+                    <dt class="app-check-your-answers__question">
+                        I needed to use help or guidance to understand what information you required me to complete
+                    </dt>
+                    <dd class="app-check-your-answers__answer">
+                        @int.Parse(Model.Q4.ToString()).GetScoreText(false)
+                    </dd>
+                    <dd class="app-check-your-answers__change">
+                        <a asp-action="Statement4">
+                            Change<span class="govuk-visually-hidden"> statement 4</span>
+                        </a>
+                    </dd>
+                </div>
+                
+                <div class="app-check-your-answers__contents">
+                    <dt class="app-check-your-answers__question">
+                        I have confidence in the application online service provided by the Gambling Commission
+                    </dt>
+                    <dd class="app-check-your-answers__answer">
+                        @int.Parse(Model.Q5.ToString()).GetScoreText(true)
+                    </dd>
+                    <dd class="app-check-your-answers__change">
+                        <a asp-action="Statement5">
+                            Change<span class="govuk-visually-hidden"> statement 5</span>
+                        </a>
+                    </dd>
+                </div>
+                
+                <div class="app-check-your-answers__contents">
+                    <dt class="app-check-your-answers__question">
+                        Feedback
+                    </dt>
+                    <dd class="app-check-your-answers__answer">
+                        @Model.Feedback
+                    </dd>
+                    <dd class="app-check-your-answers__change">
+                        <a asp-action="Feedback">
+                            Change<span class="govuk-visually-hidden"> feedback</span>
+                        </a>
+                    </dd>
+                </div>
+
+            </dl>
+
+            <h2 class="govuk-heading-m">
+                Now submit your responses
+            </h2>
+
+            <button type="submit" class="govuk-button">
+                Save and submit
+            </button>
+        </form>
+
+    </div>
+</div>
+
+
+
+

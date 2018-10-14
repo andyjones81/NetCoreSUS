@@ -1,0 +1,36 @@
+﻿@model NetCoreSUS.Models.Data.SessionStateViewModel
+
+@{
+
+    ViewData["SurveyName"] = "Survey";
+    ViewData["Title"] = "Survey";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <a asp-action="Statement5" class="govuk-back-link">Back</a>
+        <span class="govuk-caption-m">Feedback</span>
+        <h2 class="govuk-heading-m" id="subsection-title">
+            Do you have any other feedback?
+        </h2>
+        <form method="post">
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="feedback">
+                    Details
+                </label>
+                <span id="more-detail-hint" class="govuk-hint">
+                    Don’t include personal or financial information, eg your National Insurance number or credit card details.
+                </span>
+                <textarea class="govuk-textarea" id="feedback" name="feedback" rows="5" aria-describedby="more-detail-hint">@Model.Feedback</textarea>
+            </div>
+            <button type="submit" class="govuk-button">
+                Save and continue
+            </button>
+        </form>
+
+    </div>
+</div>

@@ -1,0 +1,66 @@
+﻿@model NetCoreSUS.Models.Data.SessionStateViewModel
+
+@{
+
+    ViewData["SurveyName"] = "Survey";
+    ViewData["Title"] = "Survey";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <a asp-action="Statement3" class="govuk-back-link">Back</a>
+        <span class="govuk-caption-m">Statement 4</span>
+
+        <form method="post">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="changed-name-hint">
+                    <h2 class="govuk-heading-m" id="subsection-title">
+                        I needed to use help or guidance to understand what information you required me to complete
+                    </h2>
+
+                    <div class="govuk-radios govuk-radios ">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="strongly-agree-1" name="q4" type="radio" value="0">
+                            <label class="govuk-label govuk-radios__label" for="strongly-agree-1">
+                                Strongly agree
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="agree-1" name="q4" type="radio" value="1">
+                            <label class="govuk-label govuk-radios__label" for="agree-1">
+                                Agree
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="neutral-1" name="q4" type="radio" value="2">
+                            <label class="govuk-label govuk-radios__label" for="neutral-1">
+                                No opinion
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="disagree-1" name="q4" type="radio" value="3">
+                            <label class="govuk-label govuk-radios__label" for="disagree-1">
+                                Disagree
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="strongly-disagree-1" name="q4" type="radio" value="4">
+                            <label class="govuk-label govuk-radios__label" for="strongly-disagree-1">
+                                Strongly disagree
+                            </label>
+                        </div>
+
+                    </div>
+                </fieldset>
+            </div>
+            <button type="submit" class="govuk-button">
+                Save and continue
+            </button>
+        </form>
+
+    </div>
+</div>

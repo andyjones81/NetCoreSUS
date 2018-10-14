@@ -1,0 +1,95 @@
+﻿@model List<NetCoreSUS.Models.BusinessModels.Survey>
+
+@{
+
+    ViewData["SurveyName"] = "Service Usability Score";
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section headerlinks
+    {
+    <li class="govuk-header__navigation-item">
+        <a class="govuk-header__link" href="/Reporting/">
+            Dashboard
+        </a>
+    </li>
+    <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
+        <a class="govuk-header__link" href="/Reporting/Guidance">
+            Guidance
+        </a>
+    </li>
+}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <span class="govuk-caption-l">Surveys</span>
+            <h1 class="govuk-heading-l">
+                Guidance
+            </h1>
+
+            <p class="govuk-body">A service usability score provides a standard way of understanding how good or bad a service is from the user perspective.</p>
+            <p class="govuk-body">Questions can be asked in many different ways and can have a positive or negative tone to them. Or, as our surveys do, alternate.</p>
+            <p class="govuk-body">The score is determined by taking the responses to 5 questions and giving each response a numerical ranking. Added together, these number give a score.</p>
+            <p class="govuk-body">All the response scores are then added together and divided by the number of responses to give an average.</p>
+        </div>
+            <div class="govuk-grid-column-full">
+                <h2 class="govuk-heading-m">
+                    The service usability score scale
+                </h2>
+
+                <img src="~/assets/images/1_ENga3AdnkOVzsK7N9l1wBA.jpeg" width="100%" alt="Image showing how the score relates to how good or bad a service is" />
+  
+            <table class="govuk-table">
+                <caption class="govuk-table__caption">Example</caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Question</th>
+                        <th class="govuk-table__header" scope="col">Response</th>
+                        <th class="govuk-table__header" scope="col">Score</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">It was easy to complete the information required, to submit the application</td>
+                        <td class="govuk-table__cell">Strongly agree</td>
+                        <td class="govuk-table__cell">4</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">I found some of the questions difficult to understand</td>
+                        <td class="govuk-table__cell">Disagree</td>
+                        <td class="govuk-table__cell">3</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">I got through the application quickly</td>
+                        <td class="govuk-table__cell">Agree</td>
+                        <td class="govuk-table__cell">3</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">I needed to use help or guidance to understand what information you required me to complete</td>
+                        <td class="govuk-table__cell">Agree</td>
+                        <td class="govuk-table__cell">2</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">I have confidence in the application online service provided by the Gambling Commission</td>
+                        <td class="govuk-table__cell">Strongly agree</td>
+                        <td class="govuk-table__cell">4</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body">In this example, there are 5 questions and overall the score is 16. To use this score to compare against others, it is multiplied by 5 and this provides the SUS score. In this case, 80.</p>
+            <p class="govuk-body">The accepted average score which falls within good, is 68. In this example, 80 sits in the higher end of the scale and is considered to be excellent.</p>
+
+
+
+        </div> 
+       
+    </div>

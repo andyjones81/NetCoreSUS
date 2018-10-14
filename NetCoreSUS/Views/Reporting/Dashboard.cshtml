@@ -1,0 +1,187 @@
+﻿@model List<NetCoreSUS.Models.BusinessModels.Survey>
+
+@{
+
+    ViewData["SurveyName"] = "Service Usability Score";
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section headerlinks
+    {
+    <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
+        <a class="govuk-header__link" href="/Reporting/">
+            Dashboard
+        </a>
+    </li>
+    <li class="govuk-header__navigation-item">
+        <a class="govuk-header__link" href="/Reporting/Guidance">
+            Guidance
+        </a>
+    </li>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">Surveys</span>
+        <h1 class="govuk-heading-l">
+            @DateTime.Today.AddDays((DateTime.Today.Day - 1) * -1).ToString("MMMM yyyy")
+        </h1>
+    </div>
+</div>
+
+
+<div class="govuk-grid-row">
+    @foreach (var survey in Model)
+    {
+        var filteredResponses = survey.SurveyResponses.Where(x => x.StartDate > DateTime.Today.AddDays((DateTime.Today.Day - 1) * -1)).ToList();
+        <div class="govuk-grid-column-one-third">
+            <div class="gc-stat-card">
+                <span class="govuk-caption-m">
+                    @filteredResponses.Count responses
+                </span>
+                <h3 class="govuk-heading-m">@survey.SurveyName</h3>
+
+                <h3 class="govuk-heading-l card-heading govuk-!-margin-0">
+                    @{
+                        if (survey.SurveyResponses.Any())
+                        {
+
+                            var total = filteredResponses.Sum(response => (response.Q1 + response.Q2 + response.Q3 + response.Q4 + response.Q5));
+
+                            {
+                                var score = (total * 5) / filteredResponses.Count;
+
+                                if (score < 55)
+                                {
+                                    <span class="sus-red">@score</span>
+                                }
+                                if (score >= 55 && score < 60)
+                                {
+                                    <span class="sus-orange">@score</span>
+                                }
+                                if (score >= 60 && score < 65)
+                                {
+                                    <span class="sus-yellow">@score</span>
+                                }
+                                if (score >= 65 && score < 80)
+                                {
+                                    <span class="sus-green">@score</span>
+                                }
+                                if (score >= 80)
+                                {
+                                    <span class="sus-blue">@score</span>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <span class="sus-blue">-</span>
+                        }
+                    }
+                </h3>
+
+                <div class="gc-stat-card-action">
+                    <ul>
+                        <li>
+                            <a class="govuk-link" asp-action="Survey" asp-route-id="@survey.SurveyId">Survey summary</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+    }
+
+
+
+</div>
+
+
+
+<div class="govuk-grid-row govuk-!-margin-top-8">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">Surveys</span>
+        <h1 class="govuk-heading-l">
+            Lifetime
+        </h1>
+    </div>
+</div>
+
+
+<div class="govuk-grid-row">
+    @foreach (var survey in Model)
+    {
+        <div class="govuk-grid-column-one-third">
+            <div class="gc-stat-card">
+                <span class="govuk-caption-m">
+                    @survey.SurveyResponses.Count responses
+                </span>
+                <h3 class="govuk-heading-m">@survey.SurveyName</h3>
+
+                <h3 class="govuk-heading-l card-heading govuk-!-margin-0">
+                    @{
+                        if (survey.SurveyResponses.Any())
+                        {
+                            var total = survey.SurveyResponses.Sum(response => (response.Q1 + response.Q2 + response.Q3 + response.Q4 + response.Q5));
+
+                            {
+                                var score = (total * 5) / survey.SurveyResponses.Count;
+
+                                if (score < 55)
+                                {
+                                    <span class="sus-red">@score</span>
+                                }
+                                if (score >= 55 && score < 60)
+                                {
+                                    <span class="sus-orange">@score</span>
+                                }
+                                if (score >= 60 && score < 65)
+                                {
+                                    <span class="sus-yellow">@score</span>
+                                }
+                                if (score >= 65 && score < 80)
+                                {
+                                    <span class="sus-green">@score</span>
+                                }
+                                if (score >= 80)
+                                {
+                                    <span class="sus-blue">@score</span>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <span class="sus-blue">-</span>
+                        }
+                    }
+                </h3>
+                <span class="govuk-body govuk-!-font-size-14">Average lifetime score</span>
+
+
+                <div class="gc-stat-card-action">
+                    <ul>
+                        <li>
+                            <a class="govuk-link" asp-action="Survey" asp-route-id="@survey.SurveyId">Survey summary</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+    }
+
+
+
+</div>
+
+

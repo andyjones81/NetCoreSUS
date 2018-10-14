@@ -1,0 +1,146 @@
+﻿@model NetCoreSUS.Models.PageModels.ResponsesModel
+
+@{
+
+    ViewData["SurveyName"] = "Service Usability Score";
+    ViewData["Title"] = "Survey response";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<string> monthsList = new List<string>();
+    List<int> dataList = new List<int>();
+    var filteredResponses = Model.Survey.SurveyResponses.Where(x => x.StartDate >= Model.Start && x.EndDate <= DateTime.Parse(Model.End.ToString("dd/MM/yyyy 23:59:59"))).OrderBy(x => x.StartDate).ToList();
+}
+
+
+@section headerlinks
+{
+    <li class="govuk-header__navigation-item">
+        <a class="govuk-header__link" href="/Reporting/">
+            Dashboard
+        </a>
+    </li>
+    <li class="govuk-header__navigation-item">
+        <a class="govuk-header__link" href="/Reporting/Guidance">
+            Guidance
+        </a>
+    </li>
+}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <a href="/reporting/survey/@Model.Survey.SurveyId" class="govuk-back-link">Back</a>
+        <span class="govuk-caption-l">Dashboard</span>
+        <h1 class="govuk-heading-l">
+            @Model.Survey.ServiceName
+        </h1>
+
+        <table class="govuk-table">
+            <caption class="govuk-table__caption"></caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Question</th>
+                    <th class="govuk-table__header" scope="col">Response</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+
+               
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">It was easy to complete the information required, to submit the application</td>
+                <td class="govuk-table__cell">@Model.SurveyResponse.Q1.GetScoreText(true)</td>
+            </tr>
+            
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">I found some of the questions difficult to understand</td>
+                <td class="govuk-table__cell">@Model.SurveyResponse.Q2.GetScoreText(false)</td>
+            </tr>
+            
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">I got through the application quickly</td>
+                <td class="govuk-table__cell">@Model.SurveyResponse.Q3.GetScoreText(true)</td>
+            </tr>
+            
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">I needed to use help or guidance to understand what information you required me to complete</td>
+                <td class="govuk-table__cell">@Model.SurveyResponse.Q4.GetScoreText(false)</td>
+            </tr>
+            
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">I have confidence in the application online service provided by the Gambling Commission</td>
+                <td class="govuk-table__cell">@Model.SurveyResponse.Q5.GetScoreText(true)</td>
+            </tr>
+                
+
+            </tbody>
+        </table>
+        
+        <h2 class="govuk-heading-m">
+            Comments
+        </h2>
+        
+        <p class="govuk-body">
+            @{
+                if (string.IsNullOrEmpty(Model.SurveyResponse.Comment))
+                {
+                    <text>No feedback provided</text>
+                }
+                else
+                {
+                    @Model.SurveyResponse.Comment
+                }
+            }
+        </p>
+
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        <div class="gc-stat-card">
+            <span class="govuk-caption-m">@Model.SurveyResponse.StartDate.ToString("dd MMMM yyyy - HH:mm")</span>
+            <h3 class="govuk-heading-m">Response score</h3>
+            <h3 class="govuk-heading-xl govuk-!-margin-bottom-3 sus-red">
+                @{
+                    if (Model.Survey.SurveyResponses.Any())
+                    {
+                        var total = 0;
+
+                        foreach (var surveyResponse in filteredResponses)
+                        {
+                            var responseTotal = (surveyResponse.Q1 + surveyResponse.Q2 + surveyResponse.Q3 + surveyResponse.Q4 + surveyResponse.Q5);
+                            total += responseTotal;
+                        }
+
+                        {
+                            var score = ((total * 5) / filteredResponses.Count);
+
+                            <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">
+                                @if (score < 55)
+                                {
+                                    <span class="sus-red">@score</span>
+                                }
+                                @if (score >= 55 && score < 60)
+                                {
+                                    <span class="sus-orange">@score</span>
+                                }
+                                @if (score >= 60 && score < 65)
+                                {
+                                    <span class="sus-yellow">@score</span>
+                                }
+                                @if (score >= 65 && score < 80)
+                                {
+                                    <span class="sus-green">@score</span>
+                                }
+                                @if (score >= 80)
+                                {
+                                    <span class="sus-blue">@score</span>
+                                }
+                            </h3>
+                            <span class="govuk-body govuk-!-font-size-14"></span>
+                        }
+                    }
+                }
+            </h3>
+        </div>
+    </div>
+</div>
+
+

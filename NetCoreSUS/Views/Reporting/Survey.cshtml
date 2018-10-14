@@ -1,0 +1,589 @@
+﻿@model NetCoreSUS.Models.BusinessModels.Survey
+
+@{
+
+    ViewData["SurveyName"] = "Service Usability Score";
+    ViewData["Title"] = "Survey dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<string> monthsList = new List<string>();
+    List<int> dataList = new List<int>();
+    var lifetimeAverage = 0;
+}
+
+
+@section headerlinks
+    {
+    <li class="govuk-header__navigation-item">
+        <a class="govuk-header__link" href="/Reporting/">
+            Dashboard
+        </a>
+    </li>
+    <li class="govuk-header__navigation-item">
+        <a class="govuk-header__link" href="/Reporting/Guidance">
+            Guidance
+        </a>
+    </li>
+}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <a href="/reporting" class="govuk-back-link">Back</a>
+        <span class="govuk-caption-l">@Model.ServiceName</span>
+        <h1 class="govuk-heading-l">
+            Survey summary
+        </h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-third">
+                <div class="gc-stat-card">
+                    <span class="govuk-caption-m">This month</span>
+                    <h3 class="govuk-heading-m">@DateTime.Today.ToString("MMMM")</h3>
+                    <h3 class="govuk-heading-xl govuk-!-margin-bottom-3 sus-red">
+                        @{
+                            if (Model.SurveyResponses.Any())
+                            {
+                                var total = 0;
+                                var filteredResponses = Model.SurveyResponses.Where(x => x.StartDate > DateTime.Today.AddDays((DateTime.Today.Day - 1) * -1)).ToList();
+
+                                foreach (var surveyResponse in filteredResponses)
+                                {
+                                    var responseTotal = (surveyResponse.Q1 + surveyResponse.Q2 + surveyResponse.Q3 + surveyResponse.Q4 + surveyResponse.Q5);
+                                    total += responseTotal;
+                                }
+
+                                {
+                                    var score = ((total * 5) / filteredResponses.Count);
+
+                                    <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">
+                                        @if (score < 55)
+                                        {
+                                            <span class="sus-red">@score</span>
+                                        }
+                                        @if (score >= 55 && score < 60)
+                                        {
+                                            <span class="sus-orange">@score</span>
+                                        }
+                                        @if (score >= 60 && score < 65)
+                                        {
+                                            <span class="sus-yellow">@score</span>
+                                        }
+                                        @if (score >= 65 && score < 80)
+                                        {
+                                            <span class="sus-green">@score</span>
+                                        }
+                                        @if (score >= 80)
+                                        {
+                                            <span class="sus-blue">@score</span>
+                                        }
+                                    </h3>
+                                    <span class="govuk-body govuk-!-font-size-14">@filteredResponses.Count responses</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="sus-blue">-</span>
+                            }
+                        }
+
+                    </h3>
+                </div>
+            </div>
+            <div class="govuk-grid-column-one-third">
+                <div class="gc-stat-card">
+                    <span class="govuk-caption-m">Last month</span>
+                    <h3 class="govuk-heading-m">@DateTime.Today.LastMonth().ToString("MMMM")</h3>
+                    <h3 class="govuk-heading-xl govuk-!-margin-bottom-3">
+                        @{
+
+                            if (Model.SurveyResponses.Any())
+                            {
+                                var total = 0;
+                                var filteredResponses = Model.SurveyResponses.Where(x => x.StartDate > DateTime.Today.LastMonth() && x.StartDate < DateTime.Today.AddMonths(1).LastMonth()).ToList();
+
+
+                                foreach (var surveyResponse in filteredResponses)
+                                {
+                                    var responseTotal = (surveyResponse.Q1 + surveyResponse.Q2 + surveyResponse.Q3 + surveyResponse.Q4 + surveyResponse.Q5);
+
+                                    total += responseTotal;
+                                }
+
+                                {
+                                    var score = ((total * 5) / filteredResponses.Count);
+
+                                    <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">
+                                        @if (score < 55)
+                                        {
+                                            <span class="sus-red">@score</span>
+                                        }
+                                        @if (score >= 55 && score < 60)
+                                        {
+                                            <span class="sus-orange">@score</span>
+                                        }
+                                        @if (score >= 60 && score < 65)
+                                        {
+                                            <span class="sus-yellow">@score</span>
+                                        }
+                                        @if (score >= 65 && score < 80)
+                                        {
+                                            <span class="sus-green">@score</span>
+                                        }
+                                        @if (score >= 80)
+                                        {
+                                            <span class="sus-blue">@score</span>
+                                        }
+                                    </h3>
+                                    <span class="govuk-body govuk-!-font-size-14">@filteredResponses.Count responses</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="sus-blue">-</span>
+                            }
+
+                        }
+
+                    </h3>
+                </div>
+            </div>
+
+            <div class="govuk-grid-column-one-third">
+                <div class="gc-stat-card">
+                    <span class="govuk-caption-m">Lifetime</span>
+                    <h3 class="govuk-heading-m">Score</h3>
+
+                    <h3 class="govuk-heading-xl govuk-!-margin-bottom-3">
+                        @{
+
+                            if (Model.SurveyResponses.Any())
+                            {
+                                var total = 0;
+
+                                foreach (var surveyResponse in Model.SurveyResponses)
+                                {
+                                    var responseTotal = (surveyResponse.Q1 + surveyResponse.Q2 + surveyResponse.Q3 + surveyResponse.Q4 + surveyResponse.Q5);
+
+                                    total += responseTotal;
+                                }
+
+                                {
+                                    var score = ((total * 5) / Model.SurveyResponses.Count);
+                                    lifetimeAverage = score;
+
+                                    <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">
+                                        @if (score < 55)
+                                        {
+                                            <span class="sus-red">@score</span>
+                                        }
+                                        @if (score >= 55 && score < 60)
+                                        {
+                                            <span class="sus-orange">@score</span>
+                                        }
+                                        @if (score >= 60 && score < 65)
+                                        {
+                                            <span class="sus-yellow">@score</span>
+                                        }
+                                        @if (score >= 65 && score < 80)
+                                        {
+                                            <span class="sus-green">@score</span>
+                                        }
+                                        @if (score >= 80)
+                                        {
+                                            <span class="sus-blue">@score</span>
+                                        }
+                                    </h3>
+                                    <span class="govuk-body govuk-!-font-size-14">@Model.SurveyResponses.Count responses</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="sus-blue">-</span>
+                            }
+
+                        }
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+        <h3 class="govuk-heading-m">Score and response history</h3>
+
+        @{
+            
+
+
+
+                <div class="govuk-tabs" data-module="tabs">
+                    <h2 class="govuk-tabs__title">
+                        Contents
+                    </h2>
+
+                    <ul class="govuk-tabs__list">
+                        <li class="govuk-tabs__list-item">
+                            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#table">
+                                Table
+                            </a>
+                        </li>
+                        <li class="govuk-tabs__list-item">
+                            <a class="govuk-tabs__tab" href="#chart">
+                                Charts
+                            </a>
+                        </li>
+
+                        <li class="govuk-tabs__list-item">
+                            <a class="govuk-tabs__tab" href="#feedback">
+                                All feedback
+                            </a>
+                        </li>
+
+                        <li class="govuk-tabs__list-item">
+                            <a class="govuk-tabs__tab" href="#trends">
+                                Trends
+                            </a>
+                        </li>
+                        <li class="govuk-tabs__list-item">
+                            <a class="govuk-tabs__tab" href="#change">
+                                Service Changes
+                            </a>
+                        </li>
+                        <li class="govuk-tabs__list-item">
+                            <a class="govuk-tabs__tab" href="#settings">
+                                Settings
+                            </a>
+                        </li>
+                    </ul>
+
+                <section class="govuk-tabs__panel" id="table">
+                    @if (Model.SurveyResponses.Any())
+                    {
+                        <table class="govuk-table">
+                            <caption class="govuk-table__caption"></caption>
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Month</th>
+                                <th class="govuk-table__header" scope="col">Monthly score</th>
+                                <th class="govuk-table__header" scope="col">Change</th>
+                                <th class="govuk-table__header" scope="col">Responses</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+
+                            @{
+
+                                var result = Model.SurveyResponses.OrderByDescending(x => x.StartDate)
+                                    .GroupBy(x => new
+                                    {
+                                        year = x.StartDate.ToString("yy"),
+                                        month = x.StartDate.ToString("MMMM")
+                                    }).Select(x => new
+                                    {
+                                        year = x.Key.year,
+                                        month = x.Key.month,
+                                        count = x.Count(),
+                                        total = x.Sum(response => (response.Q1 + response.Q2 + response.Q3 + response.Q4 + response.Q5))
+                                    }).ToList();
+
+                                var prevMonth = 0;
+                                var change = 0;
+
+                                for (var index = 0; index < result.Count; index++)
+                                {
+
+
+                                    var record = result[index];
+                                    var multipiler = (record.total * 5);
+                                    var score = (multipiler / record.count);
+
+                                    monthsList.Add(record.month + " " + record.year);
+                                    dataList.Add(score);
+
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell "><a href="/reporting/responses/@Model.SurveyId?month=@record.month&year=@record.year" class="govuk-link">@record.month @record.year</a></td>
+
+                                        <td class="govuk-table__cell ">
+
+                                            @if (change < 55)
+                                            {
+                                                <span class="sus-table-red">@score</span>
+                                            }
+                                            @if (change >= 55 && change < 60)
+                                            {
+                                                <span class="sus-table-orange">@score</span>
+                                            }
+                                            @if (change >= 60 && change < 65)
+                                            {
+                                                <span class="sus-table-yellow">@score</span>
+                                            }
+                                            @if (change >= 65 && change < 80)
+                                            {
+                                                <span class="sus-table-green">@score</span>
+                                            }
+                                            @if (change >= 80)
+                                            {
+                                                <span class="sus-table-blue">@score</span>
+                                            }
+
+                                        </td>
+
+                                        <td class="govuk-table__cell ">
+
+                                            @{
+                                                try
+                                                {
+                                                    //Whats the next index average score
+                                                    var nextrecord = result[index + 1];
+                                                    var nextmultipiler = (nextrecord.total * 5);
+                                                    var nextscore = (nextmultipiler / nextrecord.count);
+
+
+                                                    prevMonth = nextscore;
+                                                    change = score - prevMonth;
+                                                }
+                                                catch (Exception e)
+                                                {
+                                                    change = 0;
+                                                }
+
+                                                @change
+
+
+                                            }
+                                        </td>
+                                        <td class="govuk-table__cell ">@record.count</td>
+
+                                    </tr>
+                                }
+                            }
+                            </tbody>
+                        </table>
+                                                }
+                    else
+                    {
+                        <p class="govuk-body">No responses to show</p>
+                    }
+                </section>
+                    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="chart">
+                      @if (Model.SurveyResponses.Any()) { 
+                        <canvas id="myChart" width="400" height="200"></canvas>
+                      }
+                      else
+                      {
+                          <p class="govuk-body">No responses to show</p>
+                      }
+
+                    </section>
+
+                    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="feedback">
+                    @if (Model.SurveyResponses.Any()) { 
+                        <table class="govuk-table">
+                            <caption class="govuk-table__caption"></caption>
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Response</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+
+                            @foreach (var feedback in Model.SurveyResponses.OrderByDescending(x => x.StartDate))
+                            {
+                                if (!string.IsNullOrEmpty(feedback.Comment))
+                                {
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell">
+                                            @feedback.Comment
+                                            <br />
+                                            <a href="/reporting/response/@feedback.SurveyResponseId?month=@feedback.StartDate.ToString("MMMM")&year=@feedback.StartDate.ToString("yy")">View full survey response</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+
+
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="govuk-body">No responses to show</p>
+                    }
+                    </section>
+
+                    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trends">
+                      
+                    @if (Model.SurveyResponses.Any()) { 
+                        <h3 class="govuk-heading-s">Usability</h3>
+                        <h3 class="govuk-heading-s">Language</h3>
+                        <h3 class="govuk-heading-s">Performance</h3>
+                        <h3 class="govuk-heading-s">Content</h3>
+                        <h3 class="govuk-heading-s">Confidence</h3>  }
+                    else
+                    {
+                        <p class="govuk-body">No responses to show</p>
+                    } 
+                    </section>
+                    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="change">
+                        
+                        @{ if (Model.ServiceHistory.Any())
+                            {<h3 class="govuk-heading-s">Service change history</h3>
+                                <div class="timeline">
+                                    <ul>
+                                        @foreach (var item in Model.ServiceHistory.OrderByDescending(x=>x.When))
+                                        {
+                                            <li>
+                                                <h2>@item.When.ToString("dd MMMM yyyy")</h2>
+                                                @Html.Raw(item.What)
+                                            </li>
+                                        }
+                                    </ul>
+                                </div> }
+                            else
+                            {
+                                <p class="govuk-body">No service history recorded</p>
+                            }
+                        }
+                    </section>
+                    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="settings">
+
+
+                        <h3 class="govuk-heading-s">Survey collector url</h3>
+                        <p class="govuk-body">
+                            https://gamreggbsurveys.azurewebsites.net/survey/r/@Model.SurveyId
+                        </p>
+                    </section>
+                </div>
+           
+        }
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx,
+            {
+                type: "line",
+                data:
+                {
+                    labels: [ @{
+                                  monthsList.Reverse();
+
+                                  var newList = "";
+
+                                  foreach (var i in monthsList)
+                                  {
+                                      newList += "'" + i + "',";
+                                  }
+                              }
+                        @Html.Raw(newList.TrimEnd(','))
+                    ],
+                    datasets: [
+                        {
+                            label: "Score history",
+                            data: [ @{
+                                        dataList.Reverse();
+
+                                        var newList2 = "";
+
+                                        foreach (var i in dataList)
+                                        {
+                                            newList2 += i + ",";
+                                        }
+
+                                        @Html.Raw(newList2.TrimEnd(','))
+                                    }]
+                        }
+                    ]
+                },
+                options:
+                {
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true,
+                                    steps: 10,
+                                    stepValue: 5,
+                                    max: 100
+                                }
+                            }
+                        ]
+                    },
+                    annotation:
+                    {
+                        drawTime: 'afterDatasetsDraw',
+                        events: ['click'],
+                        dblClickSpeed: 350,
+                        annotations: [
+                            {
+                                drawTime: 'afterDraw',
+                                id: 'a-line-1',
+                                type: 'line',
+                                mode: 'horizontal',
+                                scaleID: 'y-axis-0',
+                                value: '68',
+                                borderColor: 'green',
+                                borderDash: [2, 2],
+                                borderWidth: 3,
+                                label: {
+                                    backgroundColor: 'green',
+                                    fontFamily: "sans-serif",
+                                    fontSize: 12,
+                                    fontStyle: "bold",
+                                    fontColor: "#fff",
+                                    xPadding: 4,
+                                    yPadding: 4,
+                                    cornerRadius: 4,
+                                    position: "left",
+                                    xAdjust: 0,
+                                    yAdjust: 0,
+                                    enabled: true,
+                                    content: "Target (68)"
+                                }
+                            },
+                            {
+                                drawTime: 'afterDraw',
+                                id: 'a-line-2',
+                                type: 'line',
+                                mode: 'horizontal',
+                                scaleID: 'y-axis-0',
+                                value: '@lifetimeAverage',
+                                borderColor: 'grey',
+                                borderDash: [2, 2],
+                                borderWidth: 3,
+                                label: {
+                                    backgroundColor: 'rgb(100,100,100)',
+                                    fontFamily: "sans-serif",
+                                    fontSize: 12,
+                                    fontStyle: "bold",
+                                    fontColor: "#fff",
+                                    xPadding: 4,
+                                    yPadding: 4,
+                                    cornerRadius: 4,
+                                    position: "left",
+                                    xAdjust: 0,
+                                    yAdjust: 0,
+                                    enabled: true,
+                                    content: "Lifetime average"
+                                }
+                            }
+                        ]
+                    }
+                }
+
+
+            });
+  
+    </script>
+}

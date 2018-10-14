@@ -1,0 +1,164 @@
+﻿@model NetCoreSUS.Models.PageModels.ResponsesModel
+
+@{
+
+    ViewData["SurveyName"] = "Service Usability Score";
+    ViewData["Title"] = "Survey responses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<string> monthsList = new List<string>();
+    List<int> dataList = new List<int>();
+    var filteredResponses = Model.Survey.SurveyResponses.Where(x => x.StartDate >= Model.Start && x.EndDate <= DateTime.Parse(Model.End.ToString("dd/MM/yyyy 23:59:59"))).OrderBy(x => x.StartDate).ToList();
+}
+
+@section headerlinks
+    {
+    <li class="govuk-header__navigation-item">
+        <a class="govuk-header__link" href="/Reporting/">
+            Dashboard
+        </a>
+    </li>
+    <li class="govuk-header__navigation-item">
+        <a class="govuk-header__link" href="/Reporting/Guidance">
+            Guidance
+        </a>
+    </li>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <a href="/reporting/survey/@Model.Survey.SurveyId" class="govuk-back-link">Back</a>
+        <span class="govuk-caption-l">@Model.Survey.ServiceName</span>
+        <h1 class="govuk-heading-l">
+            Responses
+        </h1>
+
+        <table class="govuk-table">
+            <caption class="govuk-table__caption"></caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Date</th>
+                    <th class="govuk-table__header" scope="col">Score</th>
+                    <th class="govuk-table__header   govuk-table__header--numeric" scope="col">Comments</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+
+
+                @foreach (var i in filteredResponses)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell "><a href="/reporting/response/@i.SurveyResponseId?month=@i.StartDate.ToString("MMMM")&year=@i.StartDate.ToString("yy")">@i.StartDate.ToString("dd MMM yy - HH:mm")</a></td>
+                        <td class="govuk-table__cell ">
+                            @{
+                                if (Model.Survey.SurveyResponses.Any())
+                                {
+                                    var total = 0;
+
+
+                                    var responseTotal = (i.Q1 + i.Q2 + i.Q3 + i.Q4 + i.Q5);
+
+                                    total += responseTotal;
+
+
+                                    {
+                                        var score = (total * 5);
+
+                                        <span>
+                                            @if (score < 55)
+                                            {
+                                                <span class="sus-table-red govuk-!-font-weight-bold">@score</span>
+                                            }
+                                            @if (score >= 55 && score < 60)
+                                            {
+                                                <span class="sus-table-orange govuk-!-font-weight-bold">@score</span>
+                                            }
+                                            @if (score >= 60 && score < 65)
+                                            {
+                                                <span class="sus-table-yellow govuk-!-font-weight-bold">@score</span>
+                                            }
+                                            @if (score >= 65 && score < 80)
+                                            {
+                                                <span class="sus-table-green govuk-!-font-weight-bold">@score</span>
+                                            }
+                                            @if (score >= 80)
+                                            {
+                                                <span class="sus-table-blue govuk-!-font-weight-bold">@score</span>
+                                            }
+                                        </span>
+
+                                    }
+                                }
+                            }
+                        </td>
+                        <td class="govuk-table__cell  govuk-table__cell--numeric">
+                            @if (!string.IsNullOrEmpty(i.Comment))
+                            {
+
+
+
+                                <span title="@i.Comment">Comments</span>
+                            }
+                            else
+                            {
+                                <text>No comments</text>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        <div class="gc-stat-card">
+            <span class="govuk-caption-m">Monthly score</span>
+            <h3 class="govuk-heading-m">@Model.Month @Model.Year</h3>
+            <h3 class="govuk-heading-xl govuk-!-margin-bottom-3 sus-red">
+                @{
+                    if (Model.Survey.SurveyResponses.Any())
+                    {
+                        var total = 0;
+
+                        foreach (var surveyResponse in filteredResponses)
+                        {
+                            var responseTotal = (surveyResponse.Q1 + surveyResponse.Q2 + surveyResponse.Q3 + surveyResponse.Q4 + surveyResponse.Q5);
+                            total += responseTotal;
+                        }
+
+                        {
+                            var score = ((total * 5) / filteredResponses.Count);
+
+                            <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">
+                                @if (score < 55)
+                                {
+                                    <span class="sus-red">@score</span>
+                                }
+                                @if (score >= 55 && score < 60)
+                                {
+                                    <span class="sus-orange">@score</span>
+                                }
+                                @if (score >= 60 && score < 65)
+                                {
+                                    <span class="sus-yellow">@score</span>
+                                }
+                                @if (score >= 65 && score < 80)
+                                {
+                                    <span class="sus-green">@score</span>
+                                }
+                                @if (score >= 80)
+                                {
+                                    <span class="sus-blue">@score</span>
+                                }
+                            </h3>
+                            <span class="govuk-body govuk-!-font-size-14">@filteredResponses.Count responses</span>
+                        }
+                    }
+                }
+            </h3>
+        </div>
+    </div>
+</div>
+
+
