@@ -21,7 +21,7 @@
                     <h2 class="govuk-heading-m" id="subsection-title">
                         I needed to use help or guidance to understand what information you required me to complete
                     </h2>
-
+                    @Html.Partial("_ValidationSummary", ViewData.ModelState)
                     <div class="govuk-radios govuk-radios ">
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="strongly-agree-1" name="q4" type="radio" value="0">

@@ -21,7 +21,7 @@
                     <h2 class="govuk-heading-m" id="subsection-title">
                         I have confidence in the application online service provided by the Gambling Commission
                     </h2>
-
+                    @Html.Partial("_ValidationSummary", ViewData.ModelState)
                     <div class="govuk-radios govuk-radios ">
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="strongly-agree-1" name="q5" type="radio" value="4">
