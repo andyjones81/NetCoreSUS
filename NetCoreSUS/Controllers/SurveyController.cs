@@ -11,6 +11,9 @@ using NetCoreSUS.Models;
 using NetCoreSUS.Models.BusinessModels;
 using NetCoreSUS.Models.Data;
 using Newtonsoft.Json;
+using Notify.Client;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace NetCoreSUS.Controllers
 {
@@ -19,14 +22,17 @@ namespace NetCoreSUS.Controllers
         private readonly DataContext _context;
         private HtmlEncoder _htmlEncoder;
         private TelemetryClient _telemetry;
+        IConfiguration configuration;
+
 
         public IActionResult ListAll()
         {
             return View(_context.Survey.ToList());
         }
 
-        public SurveyController(DataContext context, HtmlEncoder htmlEncoder)
+        public SurveyController(DataContext context, HtmlEncoder htmlEncoder, IConfiguration configuration)
         {
+            this.configuration = configuration;
             _context = context;
             _htmlEncoder = htmlEncoder;
             _telemetry = new TelemetryClient();
@@ -381,10 +387,26 @@ namespace NetCoreSUS.Controllers
                 SurveyId = model.SurveyId
             };
 
+            
             _context.SurveyResponses.Add(newResponse);
             _context.SaveChanges();
 
+       
             HttpContext.Session.Remove("surveyModel");
+            var score = (newResponse.Q1 + newResponse.Q2 + newResponse.Q3 + newResponse.Q4 + newResponse.Q5) * 5;
+
+            var client = new NotificationClient(configuration["notifySurveyAPI"]);
+
+            var personalisation = new Dictionary<string, dynamic>
+            {
+                {"feedback",newResponse.Comment},
+                {"surveyname",model.SurveyName},
+                {"score",score.ToString()}
+            };
+
+            client.SendEmail("ajones@gamblingcommission.gov.uk", configuration["surveyResponseTemplateId"],
+                personalisation, null, null);
+
 
             return RedirectToAction("Complete");
         }

@@ -77,7 +77,7 @@ namespace NetCoreSUS
             {
                 options.Cookie.Name = ".sussurvey.Session";
             });
-
+            services.AddSingleton<IConfiguration>(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 
