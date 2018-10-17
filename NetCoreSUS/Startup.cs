@@ -36,12 +36,12 @@ namespace NetCoreSUS
                 .AddBasicAuthentication(
                     options =>
                     {
-                        options.Realm = "Azure";
+                        options.Realm = "SUS Survey";
                         options.Events = new BasicAuthenticationEvents
                         {
                             OnValidatePrincipal = context =>
                             {
-                                if ((context.UserName == "andy") && (context.Password == "andy"))
+                                if ((context.UserName == Configuration["uid"]) && (context.Password == Configuration["pwd"]))
                                 {
                                     var claims = new List<Claim>
                                     {
