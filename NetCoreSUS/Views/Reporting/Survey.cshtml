@@ -44,54 +44,58 @@
                 <div class="gc-stat-card">
                     <span class="govuk-caption-m">This month</span>
                     <h3 class="govuk-heading-m">@DateTime.Today.ToString("MMMM")</h3>
-                    <h3 class="govuk-heading-xl govuk-!-margin-bottom-3 sus-red">
-                        @{
-                            if (Model.SurveyResponses.Any())
+                    @{
+                        var total = 0;
+
+                        var filteredResponses = Model.SurveyResponses.Where(x => x.StartDate > DateTime.Today.AddDays((DateTime.Today.Day - 1) * -1)).ToList();
+                        if (filteredResponses.Any())
+                        {
+
+
+                            foreach (var surveyResponse in filteredResponses)
                             {
-                                var total = 0;
-                                var filteredResponses = Model.SurveyResponses.Where(x => x.StartDate > DateTime.Today.AddDays((DateTime.Today.Day - 1) * -1)).ToList();
-
-                                foreach (var surveyResponse in filteredResponses)
-                                {
-                                    var responseTotal = (surveyResponse.Q1 + surveyResponse.Q2 + surveyResponse.Q3 + surveyResponse.Q4 + surveyResponse.Q5);
-                                    total += responseTotal;
-                                }
-
-                                {
-                                    var score = ((total * 5) / filteredResponses.Count);
-
-                                    <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">
-                                        @if (score < 55)
-                                        {
-                                            <span class="sus-red">@score</span>
-                                        }
-                                        @if (score >= 55 && score < 60)
-                                        {
-                                            <span class="sus-orange">@score</span>
-                                        }
-                                        @if (score >= 60 && score < 65)
-                                        {
-                                            <span class="sus-yellow">@score</span>
-                                        }
-                                        @if (score >= 65 && score < 80)
-                                        {
-                                            <span class="sus-green">@score</span>
-                                        }
-                                        @if (score >= 80)
-                                        {
-                                            <span class="sus-blue">@score</span>
-                                        }
-                                    </h3>
-                                    <span class="govuk-body govuk-!-font-size-14">@filteredResponses.Count responses</span>
-                                }
+                                var responseTotal = (surveyResponse.Q1 + surveyResponse.Q2 + surveyResponse.Q3 + surveyResponse.Q4 + surveyResponse.Q5);
+                                total += responseTotal;
                             }
-                            else
+
                             {
-                                <span class="sus-blue">-</span>
+                                var score = ((total * 5) / filteredResponses.Count);
+
+                                <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">
+                                    @if (score < 55)
+                                    {
+                                        <span class="sus-red">@score</span>
+                                    }
+                                    @if (score >= 55 && score < 60)
+                                    {
+                                        <span class="sus-orange">@score</span>
+                                    }
+                                    @if (score >= 60 && score < 65)
+                                    {
+                                        <span class="sus-yellow">@score</span>
+                                    }
+                                    @if (score >= 65 && score < 80)
+                                    {
+                                        <span class="sus-green">@score</span>
+                                    }
+                                    @if (score >= 80)
+                                    {
+                                        <span class="sus-blue">@score</span>
+                                    }
+                                </h3>
+                                <span class="govuk-body govuk-!-font-size-14">@filteredResponses.Count responses</span>
                             }
                         }
+                        else
+                        {
+                            <h3 class="govuk-heading-xl  govuk-!-margin-bottom-0">
+                                <span class="sus-blue">-</span>
+                            </h3>
+                            <span class="govuk-body govuk-!-font-size-14">@filteredResponses.Count responses</span>
+                        }
+                    }
 
-                    </h3>
+
                 </div>
             </div>
             <div class="govuk-grid-column-one-third">
@@ -100,11 +104,11 @@
                     <h3 class="govuk-heading-m">@DateTime.Today.LastMonth().ToString("MMMM")</h3>
                     <h3 class="govuk-heading-xl govuk-!-margin-bottom-3">
                         @{
+                            total = 0;
+                            filteredResponses = Model.SurveyResponses.Where(x => x.StartDate > DateTime.Today.LastMonth() && x.StartDate < DateTime.Today.AddMonths(1).LastMonth()).ToList();
 
-                            if (Model.SurveyResponses.Any())
+                            if (filteredResponses.Any())
                             {
-                                var total = 0;
-                                var filteredResponses = Model.SurveyResponses.Where(x => x.StartDate > DateTime.Today.LastMonth() && x.StartDate < DateTime.Today.AddMonths(1).LastMonth()).ToList();
 
 
                                 foreach (var surveyResponse in filteredResponses)
@@ -160,10 +164,11 @@
 
                     <h3 class="govuk-heading-xl govuk-!-margin-bottom-3">
                         @{
+                            total = 0;
 
                             if (Model.SurveyResponses.Any())
                             {
-                                var total = 0;
+
 
                                 foreach (var surveyResponse in Model.SurveyResponses)
                                 {

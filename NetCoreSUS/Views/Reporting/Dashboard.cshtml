@@ -45,7 +45,7 @@
 
                 <h3 class="govuk-heading-l card-heading govuk-!-margin-0">
                     @{
-                        if (survey.SurveyResponses.Any())
+                        if (filteredResponses.Any())
                         {
 
                             var total = filteredResponses.Sum(response => (response.Q1 + response.Q2 + response.Q3 + response.Q4 + response.Q5));
