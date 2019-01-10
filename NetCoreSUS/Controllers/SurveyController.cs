@@ -404,7 +404,7 @@ namespace NetCoreSUS.Controllers
                 {"score",score.ToString()}
             };
 
-            client.SendEmail("ajones@gamblingcommission.gov.uk", configuration["surveyResponseTemplateId"],
+            client.SendEmail("userresearch@gamblingcommission.gov.uk", configuration["surveyResponseTemplateId"],
                 personalisation, null, null);
 
 

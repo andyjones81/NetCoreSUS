@@ -316,23 +316,23 @@
 
                                         <td class="govuk-table__cell ">
 
-                                            @if (change < 55)
+                                            @if (score < 55)
                                             {
                                                 <span class="sus-table-red">@score</span>
                                             }
-                                            @if (change >= 55 && change < 60)
+                                            @if (change >= 55 && score < 60)
                                             {
                                                 <span class="sus-table-orange">@score</span>
                                             }
-                                            @if (change >= 60 && change < 65)
+                                            @if (score >= 60 && score < 65)
                                             {
                                                 <span class="sus-table-yellow">@score</span>
                                             }
-                                            @if (change >= 65 && change < 80)
+                                            @if (score >= 65 && score < 80)
                                             {
                                                 <span class="sus-table-green">@score</span>
                                             }
-                                            @if (change >= 80)
+                                            @if (score >= 80)
                                             {
                                                 <span class="sus-table-blue">@score</span>
                                             }
